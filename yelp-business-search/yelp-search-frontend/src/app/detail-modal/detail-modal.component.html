@@ -1,0 +1,144 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h2 class="modal-title">Reservation form</h2>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="onCloseHandled()"></button>
+  </div>
+  <div *ngIf="searchService.business" class=" modal-body">
+    <h2 class="text-center">{{searchService.business.name}}</h2>
+    <form  [formGroup]="myForm">
+      <div class="mb-2">
+        <label class="form-label">Email</label>
+        <input [(ngModel)]="myFormData.email" required formControlName="email" class="form-control" type="email" />
+        <p class="text-danger"
+          *ngIf="email?.invalid && (email?.touched || email?.dirty) && email?.errors?.['required']"
+        >Email is required</p>
+        <p class="text-danger"
+           *ngIf="email?.invalid && (email?.touched || email?.dirty) && email?.errors?.['email']"
+        >Email must be a valid email address</p>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Date</label>
+        <input min="{{now | date:'yyyy-MM-dd'}}" [(ngModel)]="myFormData.date" required formControlName="date" type="date" class="form-control"  />
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Time</label>
+        <div class="d-flex align-items-center">
+          <select [(ngModel)]="myFormData.hours" required formControlName="hours" class="form-select me-3 w-25">
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+          </select>
+          <span class="me-3">:</span>
+          <select [(ngModel)]="myFormData.minutes" required formControlName="minutes" class="form-select me-3 w-25">
+            <option value="00">00</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
+          </select>
+        </div>
+      </div>
+      <div class="text-center">
+        <button (click)="onSubmit()" [disabled]="myForm.invalid" class="btn btn-danger">Submit</button>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-dark" data-bs-dismiss="modal"
+            (click)="onCloseHandled()">Close
+    </button>
+  </div>
+</ng-template>
+
+
+<div class="row">
+  <div class="col-12 col-lg-7 m-auto">
+    <div *ngIf="searchService.business" class="card text-center pt-0 pb-0 mt-0 mb-0">
+      <img (click)="searchService.business = null" src="assets/back.png" width="80"/>
+      <div class="card-body">
+        <h1>{{searchService.business.name}}</h1>
+        <mat-tab-group mat-align-tabs="center" backgroundColor="accent" style="overflow: hidden" dynamicHeight>
+          <mat-tab label="Business details" style="overflow: hidden">
+            <div class="row">
+              <div class="col-12 col-lg-6">
+                <h2 class="text-center">Address</h2>
+                <h4 class="text-center">{{searchService.business.location.display_address.join('')}}</h4>
+                <h2 class="text-center">Phone</h2>
+                <h4 class="text-center">{{searchService.business.display_phone}}</h4>
+                <h2 class="text-center">Status</h2>
+                <h4 class="text-center"
+                    [ngClass]="searchService.business.is_closed ? 'text-danger' : 'text-success'">
+                  {{searchService.business.is_closed ? 'Closed' : 'Opened'}}</h4>
+              </div>
+              <div class="col-12 col-lg-6">
+                <h2 class="text-center">Category</h2>
+                <h4 class="text-center">{{formatCategories(searchService.business)}}</h4>
+                <h2 class="text-center">Price range</h2>
+                <h4 class="text-center">{{searchService.business.price}}</h4>
+                <h2 class="text-center">Visit yelp for more</h2>
+                <h4 class="text-center">
+                  <a target="_blank" [href]="searchService.business.url">Business link</a>
+                </h4>
+
+              </div>
+            </div>
+            <div>
+              <button *ngIf="!reserved"  class="btn btn-danger"  (click)="openModal(content)">Reserve now
+              </button>
+              <button *ngIf="reserved" (click)="onCancel()" class="btn btn-primary">
+                Cancel reservation
+              </button>
+            </div>
+            <div>
+              <p>Share on
+                <a target="_blank"
+                   href="https://twitter.com/intent/tweet?text=Check {{searchService.business.name}} on Yelp&url={{searchService.business.url}}">
+                  <i class="bi bi-twitter" style="color: #55acee; font-size: 40px"></i>
+                </a>
+                <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{searchService.business.url}}">
+                  <i class="bi bi-facebook" style="color:#4267B2; font-size: 40px"></i>
+                </a>
+              </p>
+            </div>
+
+            <!-- tried ng bootstrap -->
+            <ngb-carousel *ngIf="searchService.business">
+              <ng-template *ngFor="let p of searchService.business.photos" ngbSlide>
+                <div class="picsum-img-wrapper">
+                  <img [src]="p" alt="business picture" style="width:50%;height:50%"/>
+                </div>
+              </ng-template>
+            </ngb-carousel>
+
+          </mat-tab>
+          <mat-tab label="Map location">
+            <div class="w-100">
+              <google-map width="100%" [options]="mapOptions">
+                <map-marker [position]="marker.position"></map-marker>
+              </google-map>
+            </div>
+          </mat-tab>
+          <mat-tab label="Reviews">
+            <ul class="list-group">
+              <li *ngFor="let review of searchService.reviews" class="list-group-item review" style="padding: 10px">
+                <h2 class="text-start">{{review.user.name}}</h2>
+                <h4 class="text-start">{{review.rating}}/5</h4>
+                <h5 class="text-start">{{review.text}}</h5>
+                <h5 class="text-start">{{review.time_created | date: 'yyyy-MM-dd'}}</h5>
+              </li>
+            </ul>
+          </mat-tab>
+        </mat-tab-group>
+        <br>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+

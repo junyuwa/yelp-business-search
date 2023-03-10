@@ -1,0 +1,43 @@
+form {
+    padding: 20px;
+}
+
+button {
+    margin: 10px;
+}
+
+span {
+    color: red;
+}
+
+#search-container {
+    width: auto;
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width:550px) {
+    #search-container {
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-bottom: 5px;
+    }
+
+}
+
+@media screen and (min-width:550px) {
+    #search-container {
+        width: 50%;
+    }
+
+}
+
+
+.inline-input {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#distance-input,
+#category-input {
+    width: 40%;
+}

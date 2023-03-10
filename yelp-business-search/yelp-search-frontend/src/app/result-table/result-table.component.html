@@ -1,0 +1,24 @@
+<table *ngIf="searchService.businesses.length > 0 && !searchService.business" class="table rounded rounded-5 overflow-hidden table-bordered table-striped" id="result-table">
+    <thead class="bg-white">
+        <tr>
+            <th scope="col" style="width:10%">#</th>
+            <th scope="col" style="width:25%">Image</th>
+            <th scope="col" style="width:45%">Business Name</th>
+            <th scope="col" style="width:10%">Rating</th>
+            <th scope="col" style="width:10%">Distance(miles)</th>
+        </tr>
+    </thead>
+    <tbody class="bg-white">
+        <tr (click)="searchService.getSingleData(business.id)" *ngFor="let business of searchService.businesses; let idx=index">
+          <td>{{idx + 1}}</td>
+          <td>
+            <img width="100" src="{{business.image_url}}"/>
+          </td>
+          <td>
+            {{business.name}}
+          </td>
+          <td>{{business.rating}}</td>
+          <td>{{business.distance / 1609 | number: '0.0-0'}}</td>
+        </tr>
+    </tbody>
+</table>

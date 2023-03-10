@@ -1,0 +1,76 @@
+<div id="search-container" class="container-md rounded-3 border border-1 bg-white">
+  <form ngNativeValidate (ngSubmit)="onSubmit()">
+    <h1>Business Search</h1>
+    <hr>
+    <div class="keyword form-group">
+      <p>
+        <label for="keyword">Keyword<span class="star-symbol">*</span></label>
+      </p>
+      <input type="text"
+             name="term"
+             [(ngModel)]="myFormData.keyword"
+             id="term"
+             (input)="onAutocomplete()" class="form-control" matInput
+             [matAutocomplete]="auto"
+             required>
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <ng-container>
+          <mat-option [value]="option" *ngFor="let option of autocompleteOptions">
+            {{ option }}
+          </mat-option>
+        </ng-container>
+      </mat-autocomplete>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-lg-5 form-group">
+        <p>
+          <label for="distance">Distance(miles)</label>
+        </p>
+        <input type="text"
+               [(ngModel)]="myFormData.distance"
+               name="distance" id="distance-input" class="form-control w-100">
+      </div>
+
+      <div class="col-12 col-lg-5 form-group">
+        <p>
+          <label for="category">Category<span class="star-symbol">*</span></label>
+        </p>
+        <select [(ngModel)]="myFormData.category"
+                name="categories" id="category-input" class="form-control w-100" required>
+          <option value="default">Default</option>
+          <option value="arts">Arts & Entertainment</option>
+          <option value="health">Health & Medical</option>
+          <option value="hotelstravel">Hotels & Travel</option>
+          <option value="food">Food</option>
+          <option value="professional">Professional services</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="location for-group">
+      <p>
+        <label for="location">Location<span class="star-symbol">*</span></label>
+      </p>
+      <input name="location"
+             [required]="!autoDetectLocation"
+             [(ngModel)]="myFormData.location"
+             [disabled]="autoDetectLocation"
+             class="form-control"
+      />
+
+    </div>
+
+    <hr>
+
+    <label for="autolocation">Auto-detect my location</label>
+    <input type="checkbox" name="autolocation" id="autolocation" value="yes" style="margin:0.5rem"
+           labelPosition="before" (change)="autoLocation($event)">
+
+
+    <div class="form-button text-center">
+      <button class="btn btn-danger" id="submit-button" type="submit">SUBMIT</button>
+      <button (click)="clearForm()" class="btn btn-primary" type="reset" id="clear-button" >CLEAR</button>
+    </div>
+  </form>
+</div>

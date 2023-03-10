@@ -1,0 +1,23 @@
+@media screen and (max-width:550px) {
+    #result-table {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+}
+
+@media screen and (min-width:550px) {
+    #result-table {
+        width: 70%;
+    }
+
+}
+
+#result-table {
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+td {
+    cursor: pointer
+}

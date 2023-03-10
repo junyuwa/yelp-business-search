@@ -1,0 +1,30 @@
+<app-header></app-header>
+<div class="container">
+  <div>
+    <table class="table rounded-3 bg-white  table-hover">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Business Name</th>
+          <th scope="col">Date</th>
+          <th scope="col">Time</th>
+          <th scope="col">Email</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reservation of reservations; let idx = index;">
+          <th scope="row">{{idx + 1}}</th>
+          <td>{{reservation.businessName}}</td>
+          <td>{{reservation.date | date: 'yyyy-MM-dd'}}</td>
+          <td>{{reservation.hours}}:{{reservation.minutes}}</td>
+          <td>{{reservation.email}}</td>
+          <td>
+            <i (click)="onCancel(reservation.businessName)" class="bi bi-trash3"></i>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
