@@ -84,12 +84,19 @@ export class SearchPageComponent implements OnInit {
   autoLocation(e: any) {
     if (e.target.checked) {
       this.autoDetectLocation = true;
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          this.latitude = position.coords.latitude;
-          this.longitude = position.coords.longitude;
+      fetch('https://ipinfo.io/json?token=663046f142469e')
+        .then(res => res.json())
+        .then(data => {
+          let loc = data.loc;
+          let x = loc.indexOf(',');
+          let lat = loc.slice(0, x);
+          let y = loc.indexOf(',') + 1;
+          let z = loc.length;
+          let lng = loc.slice(y, z);
+          this.latitude = lat;
+          this.longitude = lng;
         })
-      }
+
     } else {
       this.autoDetectLocation = false
     }
